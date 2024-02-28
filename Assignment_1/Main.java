@@ -1,6 +1,6 @@
 public class Main {
 
-    static final int PARTICLES_NR = 2;
+    static final int PARTICLES_NR = 30;
     static Particle[] particles =  new Particle[PARTICLES_NR];
 
     static double[] globalBestPos;
@@ -20,16 +20,15 @@ public class Main {
         int upperBound = Integer.parseInt(args[4]);
         c1 = Double.parseDouble(args[5]);
         c2 = Double.parseDouble(args[6]);
-        
-        //w = 0.5 * (c1 + c2) - 1;
+        w = Double.parseDouble(args[7]);
 
         createSwarm(dim, lowerBound, upperBound);
         for (int itr = 0; itr < iterations; itr++) {
 
-            fitnessEval(itr);
+            fitnessEval();
 
-            printParticles();
-            //printAvgFitness();
+            //printParticles();
+            printAvgFitness();
             //System.out.println(globalBestFitness);
 
             updateVelAndPos(dim);
@@ -39,13 +38,13 @@ public class Main {
     public static void updateVelAndPos(int dim) {
         for (int p = 0; p < PARTICLES_NR; p++) {
 
-            double[] pos = particles[p].getPosition();
-            double[] vel = particles[p].getVelocity();
+            double[] pos = particles[p].getPosition().clone();
+            double[] vel = particles[p].getVelocity().clone();
 
             double[] new_pos = new double[dim];
             double[] new_vel = new double[dim];
 
-            double[] bestPos = particles[p].getLocalBestPosition();
+            double[] localBestPos = particles[p].getLocalBestPosition().clone();
 
             for (int d = 0; d < dim; d++) {
 
@@ -53,7 +52,9 @@ public class Main {
                 double r1 = Math.random();
                 double r2 = Math.random();
 
-                new_vel[d] = (vel[d]) + (c1 * r1) * (bestPos[d] - pos[d]) + (c2 * r2) * (globalBestPos[d] - pos[d]);
+                //System.out.println(r1 + " " + r2);
+
+                new_vel[d] = (w * vel[d]) + ((c1 * r1) * (localBestPos[d] - pos[d])) + ((c2 * r2) * (globalBestPos[d] - pos[d]));
 
                 //Update Position
                 new_pos[d] = pos[d] + new_vel[d];
@@ -72,43 +73,27 @@ public class Main {
         }
     }
 
-    public static void fitnessEval(int itr) {
+    public static void fitnessEval() {
 
-        if (itr != 0) {
-
+            //Evaluate each particle
             for (int i = 0; i < PARTICLES_NR; i++) {
-
-                double fitness = EvalFunctions.absoluteValue(particles[i].getPosition());
-                particles[i].setFitness(fitness, itr);
-
-                updateGlobalBest(i, fitness);
+                double new_fitness = EvalFunctions.absoluteValue(particles[i].getPosition());
+                particles[i].setFitness(new_fitness);
             }
 
-        } else {
-
-            double fitness = EvalFunctions.absoluteValue(particles[0].getPosition());
-            particles[0].setFitness(fitness, itr);
-
-            globalBestFitness = fitness;
+            //Find global best position
+            globalBestFitness = particles[0].getLocalBestFitness();
             globalBestParticle = 0;
-            globalBestPos = particles[0].getPosition().clone();
+            globalBestPos = particles[0].getLocalBestPosition().clone();
 
             for (int i = 1; i < PARTICLES_NR; i++) {
-                fitness = EvalFunctions.absoluteValue(particles[i].getPosition());
-                particles[i].setFitness(fitness, itr);
+                if (particles[i].getLocalBestFitness() < globalBestFitness) {
 
-                updateGlobalBest(i, fitness);
+                    globalBestFitness = particles[i].getLocalBestFitness();
+                    globalBestParticle = i;
+                    globalBestPos = particles[i].getLocalBestPosition().clone();
+                }
             }
-        }
-
-    }
-
-    public static void updateGlobalBest(int i, double fitness) {
-        if (fitness < globalBestFitness) {
-            globalBestFitness = fitness;
-            globalBestParticle = i;
-            globalBestPos = particles[i].getPosition().clone();
-        }
     }
 
     public static void printParticles() {

@@ -23,6 +23,9 @@ public class Particle {
             position[i] = (int) (Math.random() * (upperBound - lowerBound) + lowerBound);
         }
         localBestPosition = position.clone();
+
+        fitness = EvalFunctions.absoluteValue(position);
+        this.localBestFitness = fitness;
     }
 
     public double[] getPosition() {
@@ -30,7 +33,7 @@ public class Particle {
     }
 
     public void setPosition(double[] position) {
-        this.position = position;
+        this.position = position.clone();
     }
 
     public double[] getVelocity() {
@@ -38,18 +41,16 @@ public class Particle {
     }
 
     public void setVelocity(double[] velocity) {
-        this.velocity = velocity;
+        this.velocity = velocity.clone();
     }
 
     public double getFitness() {
         return fitness;
     }
 
-    public void setFitness(double fitness, int itr) {
+    public void setFitness(double fitness) {
 
-        if (itr == 0) {
-            this.localBestFitness = fitness;            
-        } else if (fitness < localBestFitness) {
+        if (fitness < localBestFitness) {
             localBestFitness = fitness;
             localBestPosition = position.clone();
         }
