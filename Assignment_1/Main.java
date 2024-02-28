@@ -21,11 +21,12 @@ public class Main {
         c1 = Double.parseDouble(args[5]);
         c2 = Double.parseDouble(args[6]);
         w = Double.parseDouble(args[7]);
+        int evalFunction = Integer.parseInt(args[8]);
 
-        createSwarm(dim, lowerBound, upperBound);
+        createSwarm(dim, lowerBound, upperBound, evalFunction);
         for (int itr = 0; itr < iterations; itr++) {
 
-            fitnessEval();
+            fitnessEval(evalFunction);
 
             //printParticles();
             printAvgFitness();
@@ -66,20 +67,17 @@ public class Main {
         }
     }
 
-    public static void createSwarm(int dim, int lowerBound, int upperBound) {
+    public static void createSwarm(int dim, int lowerBound, int upperBound, int evalFunction) {
         // Init swarm particles
         for (int i = 0; i < PARTICLES_NR; i++) {
-            particles[i] = new Particle(dim, lowerBound, upperBound);
+            particles[i] = new Particle(dim, lowerBound, upperBound, evalFunction);
         }
     }
 
-    public static void fitnessEval() {
+    public static void fitnessEval(int evalFunction) {
 
             //Evaluate each particle
-            for (int i = 0; i < PARTICLES_NR; i++) {
-                double new_fitness = EvalFunctions.absoluteValue(particles[i].getPosition());
-                particles[i].setFitness(new_fitness);
-            }
+            evalMethod(evalFunction);
 
             //Find global best position
             globalBestFitness = particles[0].getLocalBestFitness();
@@ -94,6 +92,26 @@ public class Main {
                     globalBestPos = particles[i].getLocalBestPosition().clone();
                 }
             }
+    }
+
+    public static void evalMethod(int evalFunction) {
+
+        switch (evalFunction) {
+            case 0:
+            for (int i = 0; i < PARTICLES_NR; i++) {
+                double new_fitness = EvalFunctions.absoluteValue(particles[i].getPosition());
+                particles[i].setFitness(new_fitness);
+            }
+                break;
+            case 1:
+            for (int i = 0; i < PARTICLES_NR; i++) {
+                double new_fitness = EvalFunctions.Ackley1(particles[i].getPosition());
+                particles[i].setFitness(new_fitness);
+            }
+            default:
+                break;
+        }
+
     }
 
     public static void printParticles() {

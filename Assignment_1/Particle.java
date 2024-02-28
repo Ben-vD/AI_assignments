@@ -15,7 +15,7 @@ public class Particle {
      * @param lowerBound
      * @param upperBound
      */
-    public Particle(int dim, int lowerBound, int upperBound) {
+    public Particle(int dim, int lowerBound, int upperBound, int evalFunction) {
         this.position = new double[dim];
         this.velocity = new double[dim];
 
@@ -24,7 +24,15 @@ public class Particle {
         }
         localBestPosition = position.clone();
 
-        fitness = EvalFunctions.absoluteValue(position);
+        switch (evalFunction) {
+            case 0:
+            fitness = EvalFunctions.absoluteValue(position);
+                break;
+            case 1:
+            fitness = EvalFunctions.Ackley1(position);
+            default:
+                break;
+        }
         this.localBestFitness = fitness;
     }
 
