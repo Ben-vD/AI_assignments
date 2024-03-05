@@ -29,7 +29,8 @@ public class Main {
             fitnessEval(evalFunction);
 
             //printParticles();
-            printAvgFitness();
+            //printAvgFitness();
+            printParticleCoords(itr);
             //System.out.println(globalBestFitness);
 
             updateVelAndPos(dim);
@@ -126,6 +127,13 @@ public class Main {
             System.out.println("\u001B[31mParticle " + i + "\u001B[0m\n" + particles[i].toString() + "\n");
         }
         System.out.println("---------------------------------------");
+    }
+
+    public static void printParticleCoords(int itr) {
+
+        for (int i = 0; i < PARTICLES_NR; i++) {
+            System.out.println(itr + "," + i + particles[i].stringPositions());
+        }
     }
 
     public static void printAvgFitness() {

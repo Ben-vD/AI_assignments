@@ -73,6 +73,14 @@ public class Particle {
         return localBestPosition;
     }
 
+    public String stringPositions() {
+        String s = "";
+        for (int i = 0; i < position.length; i++) {
+            s = s + "," + position[i];
+        }
+        return s;
+    }
+
     @Override
     public String toString() {
         
