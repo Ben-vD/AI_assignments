@@ -22,6 +22,15 @@ public class Main {
         c2 = Double.parseDouble(args[6]);
         w = Double.parseDouble(args[7]);
         int evalFunction = Integer.parseInt(args[8]);
+        double lamda = 0;
+
+        if (approach == 1) {
+            lamda = Double.parseDouble(args[9]);
+        } else if (approach == 2) {
+            lamda = Math.random();
+        }
+
+
 
         createSwarm(dim, lowerBound, upperBound, evalFunction);
         for (int itr = 0; itr < iterations; itr++) {
@@ -33,11 +42,11 @@ public class Main {
             printParticleCoords(itr);
             //System.out.println(globalBestFitness);
 
-            updateVelAndPos(dim);
+            updateVelAndPos(dim, approach, lamda);
         }
     }
 
-    public static void updateVelAndPos(int dim) {
+    public static void updateVelAndPos(int dim, int approach, double lamda) {
         for (int p = 0; p < PARTICLES_NR; p++) {
 
             double[] pos = particles[p].getPosition().clone();
@@ -54,9 +63,12 @@ public class Main {
                 double r1 = Math.random();
                 double r2 = Math.random();
 
-                //System.out.println(r1 + " " + r2);
-
-                new_vel[d] = (w * vel[d]) + ((c1 * r1) * (localBestPos[d] - pos[d])) + ((c2 * r2) * (globalBestPos[d] - pos[d]));
+                double[] currentBestPos = new double[dim];
+                if (approach == 1) {
+                    currentBestPos = findCurrentBestPos();
+                }                
+                
+                new_vel[d] = (w * vel[d]) + ((c1 * r1) * (localBestPos[d] - pos[d])) + ((c2 * r2) * ((1 - lamda) * (globalBestPos[d] - pos[d]) + (lamda) * (currentBestPos[d] - pos[d])));
 
                 //Update Position
                 new_pos[d] = pos[d] + new_vel[d];
@@ -66,6 +78,19 @@ public class Main {
             particles[p].setPosition(new_pos);
 
         }
+    }
+
+    public static double[] findCurrentBestPos(){
+        double bestFitness = particles[0].getFitness();
+        double[] bestPos = particles[0].getPosition();
+
+        for (int i = 1; i < PARTICLES_NR; i++) {
+            if (particles[i].getFitness() < bestFitness) {
+                bestFitness = particles[i].getFitness();
+                bestPos = particles[i].getPosition().clone();
+            }
+        }
+        return bestPos;
     }
 
     public static void createSwarm(int dim, int lowerBound, int upperBound, int evalFunction) {
