@@ -1,0 +1,11 @@
+0	Absolute Value	Continuous	Non-Differentiable	Separable	Scalable	Unimodal	xi ∈ [−100, 100]	f (x∗ ) = 0.0, and x∗ = (0, . . . , 0)		*
+1	Ackley1		Continuous	Differentiable		Non-separable	Scalable	Multi-modal	xi ∈ [−32, 32]		f (x∗ ) = 0.0, and x∗ = (0, . . . , 0)		*
+2	Alpine1		Continuous	Non-Differentiable	Separable	Non-Scalable	Multi-modal	xi ∈ [−10, 10]		f (x∗ ) = 0.0, and x∗ = (0, . . . , 0)		*
+3	Alpine2		Continuous	Differentiable		Separable	Scalable	Multi-modal	xi ∈ [0, 10]		f (x∗ ) = −6.1295, and x = (7.917, . . . , 7.917)	
+4	Step 2		Discontinuous	Non-Differentiable	Separable	Scalable	Uni-modal	xi ∈ [−100, 100]	f (x∗ ) = 0, x∗ = (0, . . . , 0)			
+5	Schwefel 2_23	Continuous	Differentiable		Non-Separable	Scalable	Unimodal	xi ∈ [−10, 10]		f (x∗ ) = 0, x∗ = (0, . . . , 0)			
+6	Step 3		Discontinuous	Non-Differentiable	Separable	Scalable	Unimodal	xi ∈ [−5.12, 5.12]	f (x∗ ) = c, x∗ = (0, . . . , 0)			*
+7	Shubert 4	Continuous	Differentiable		Separable	Non-Scalable	Multi-modal	xi ∈ [−10, 10]		f (x∗ ) ≈ −25.740858					*
+8	Discus		Continuous	Differentiable		Separable			Uni-modal	xi ∈ [−100, 100]	f (x∗ ) = 0						*
+9	EggCrate	Continuous	Differentiable		Separable	Non-Scalable	Multi-modal	xi ∈ [−5, 5]		f (x∗ ) = 0, x∗ = (0, . . . , 0)
+10	Deb1		Continuous	Differentiable		Separable			Multi-modal	xi ∈ [−1, 1]		f (x∗ ) = 0

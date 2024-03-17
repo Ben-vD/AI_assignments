@@ -8,6 +8,11 @@ public class Particle {
     private double localBestPosition[];
     private double localBestFitness;
 
+    private double upperBound;
+    private double lowerBound;
+
+    private boolean feasiblePos;
+
     /**
      * Constructor for the particle.
      * 
@@ -15,21 +20,54 @@ public class Particle {
      * @param lowerBound
      * @param upperBound
      */
-    public Particle(int dim, int lowerBound, int upperBound, int evalFunction) {
+    public Particle(int dim, double lowerBound, double upperBound, int evalFunction) {
         this.position = new double[dim];
         this.velocity = new double[dim];
 
+        this.upperBound = upperBound;
+        this.lowerBound = lowerBound;
+
+        feasiblePos = true;
+
         for (int i = 0; i < position.length; i++) {
-            position[i] = (int) (Math.random() * (upperBound - lowerBound) + lowerBound);
+            position[i] =  (Math.random() * (upperBound - lowerBound) + lowerBound);
         }
         localBestPosition = position.clone();
 
         switch (evalFunction) {
             case 0:
-            fitness = EvalFunctions.absoluteValue(position);
+            fitness = EvalFunctions.AbsoluteValue(position);
                 break;
             case 1:
             fitness = EvalFunctions.Ackley1(position);
+                break;
+            case 2:
+            fitness = EvalFunctions.Alpine1(position);
+                break;    
+            case 3:
+            fitness = EvalFunctions.Alpine2(position);
+                break;
+            case 4:
+            fitness = EvalFunctions.Step2(position);
+                break;
+            case 5:
+            fitness = EvalFunctions.Schwefel2_23(position);
+                break; 
+            case 6:
+            fitness = EvalFunctions.Step3(position);
+                break;
+            case 7:
+            fitness = EvalFunctions.Shubert4(position);
+                break;
+            case 8:
+            fitness = EvalFunctions.Discus(position);
+                break;
+            case 9:
+            fitness = EvalFunctions.EggCrate(position);
+                break; 
+            case 10:
+            fitness = EvalFunctions.Deb1(position);
+                break; 
             default:
                 break;
         }
@@ -58,11 +96,26 @@ public class Particle {
 
     public void setFitness(double fitness) {
 
-        if (fitness < localBestFitness) {
-            localBestFitness = fitness;
-            localBestPosition = position.clone();
+        //Infinity Roaming fix
+            feasiblePos = true;
+        for (int i = 0; i < position.length; i++) {
+            if (position[i] > upperBound || position[i] < lowerBound) {
+                feasiblePos = false;
+                break;
+            }
+        }
+
+        if (feasiblePos) {
+            if (fitness < localBestFitness) {
+                localBestFitness = fitness;
+                localBestPosition = position.clone();
+            }
         }
         this.fitness = fitness;
+    }
+
+    public boolean getFeasiblePos() {
+        return feasiblePos;
     }
 
     public double getLocalBestFitness() {
