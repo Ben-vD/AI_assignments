@@ -27,14 +27,20 @@ double rand_range_double(double min, double max) {
     return rand_double;
 }
 
-void printFloatArrayPtr(double **arr, int rows, int cols) {
+void printDouble2DArrayPtr(double **arr, int rows, int cols) {
 
     for (int r = 0; r < rows; r++) {
-
         for (int c = 0; c < cols; c++) {
-            printf("%f ", *(*(arr + r) + c));
+            printf("%lf ", *(*(arr + r) + c));
         }
         printf("\n");
+    }
+    printf("\n");
+}
+
+void printDoubleArray(double *arr, int l) {
+    for (int i = 0; i < l; i++) {
+        printf("%lf ", *(arr + i));
     }
     printf("\n");
 }

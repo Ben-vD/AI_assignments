@@ -5,9 +5,12 @@
 #include "ObjectiveFunctions.h"
 #include "UtilFunctions.h"
 
-double** initialPopulation(int populationSize, int chromosomeSize, double lowerBound, double upperBound);
+double** initInitialPopulation(int populationSize, int chromosomeSize, double lowerBound, double upperBound);
 void evolution(double **initialPopulation, int generations, int populationSize, int chromosomeSize, int recombCoefM);
 double** nextGeneration (double **initialPopulation, int generations, int populationSize, int chromosomeSize, int recombCoefM);
+
+double* populationFitness(double** individuals, int populationSize, int chromosomeSize, int obectiveFunction);
+double individualFitness(double* individual, int chromosomeSize, int obectiveFunction);
 
 int main(int argc, char *argv[]){
 
@@ -18,22 +21,27 @@ int main(int argc, char *argv[]){
     srand(time(NULL));
 
     printf("Population size = %d, Chromosome size (Number of genes)) = %d, Generations = %d\n", populationSize, chromosomeSize, generations);
-    printf("Lowerbound = %f, Upperbound = %f\n", lowerBound, upperBound);
+    printf("Lowerbound = %lf, Upperbound = %lf\n", lowerBound, upperBound);
     printf("Recombination coefficient method = %d\n\n", recombCoefM);
 
     // Generate Random initial population
-    double **individuals = initialPopulation(populationSize, chromosomeSize, lowerBound, upperBound);
-    printFloatArrayPtr(individuals, populationSize, chromosomeSize);
+    double **initialPopulation = initInitialPopulation(populationSize, chromosomeSize, lowerBound, upperBound);
+    printDouble2DArrayPtr(initialPopulation, populationSize, chromosomeSize);
+
+    double *fitness = populationFitness(initialPopulation, populationSize, chromosomeSize, 0);
+
+    printDoubleArray(fitness, populationSize);
 
     //Evolution for number of generations
-    evolution(individuals, generations, populationSize, chromosomeSize, recombCoefM);
+    //evolution(individuals, generations, populationSize, chromosomeSize, recombCoefM);
 
-    freeDouble2DArray(individuals, populationSize);
+    freeDouble2DArray(initialPopulation, populationSize);
+    free(fitness);
 
     return 0;
 }
 
-double** initialPopulation(int populationSize, int chromosomeSize, double lowerBound, double upperBound) {
+double** initInitialPopulation(int populationSize, int chromosomeSize, double lowerBound, double upperBound) {
 
     double **individuals = (double**) malloc (populationSize * sizeof(double*));
 
@@ -70,5 +78,22 @@ double** nextGeneration (double **parents, int generations, int populationSize, 
 
 
     return NULL;
+
+}
+
+double* populationFitness(double** individuals, int populationSize, int chromosomeSize, int obectiveFunction) {
+
+    double *fitnessArray = (double*) malloc(populationSize * sizeof(double));
+    for (int i = 0; i < populationSize; i++) {
+        *(fitnessArray + i) = individualFitness(*(individuals + i), chromosomeSize, obectiveFunction);
+    }
+    return fitnessArray;
+}
+
+double individualFitness(double* individual, int chromosomeSize, int obectiveFunction) {
+
+    if (obectiveFunction == 0) {
+        return absolute(individual, chromosomeSize);
+    }
 
 }
