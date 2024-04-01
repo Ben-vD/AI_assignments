@@ -46,3 +46,11 @@ double sumArray(double* arr, int l) {
     }
     return sum;
 }
+
+void freeDouble2DArray(double** arr, int rows) {
+
+    for (int r = 0; r < rows; r++) {
+        free(*(arr + r));
+    }
+    free(arr);
+}

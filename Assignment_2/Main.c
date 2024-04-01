@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
     //Evolution for number of generations
     evolution(individuals, generations, populationSize, chromosomeSize, recombCoefM);
 
-    free(individuals);
+    freeDouble2DArray(individuals, populationSize);
 
     return 0;
 }
@@ -61,10 +61,12 @@ void evolution(double **initialPopulation, int generations, int populationSize, 
         double **offspring = nextGeneration(parents, generations, populationSize, chromosomeSize, recombCoefM);
 
     }
+
+    freeDouble2DArray(parents, populationSize);
+
 }
 
 double** nextGeneration (double **parents, int generations, int populationSize, int chromosomeSize, int recombCoefM) {
-
 
 
     return NULL;
