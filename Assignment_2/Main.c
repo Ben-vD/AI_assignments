@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <omp.h>
+
 #include "ObjectiveFunctions.h"
 #include "UtilFunctions.h"
 
 double** initInitialPopulation(int populationSize, int chromosomeSize, double lowerBound, double upperBound);
+
 void evolution(double **initialPopulation, int generations, int populationSize, int chromosomeSize, int recombCoefM);
 double** nextGeneration (double **initialPopulation, int generations, int populationSize, int chromosomeSize, int recombCoefM);
 
@@ -44,7 +47,7 @@ int main(int argc, char *argv[]){
 double** initInitialPopulation(int populationSize, int chromosomeSize, double lowerBound, double upperBound) {
 
     double **individuals = (double**) malloc (populationSize * sizeof(double*));
-
+ 
     for (int i = 0; i < populationSize; i++) {
         *(individuals + i) = (double*) malloc(chromosomeSize * sizeof(double));
     }
@@ -82,10 +85,15 @@ double** nextGeneration (double **parents, int generations, int populationSize, 
 }
 
 double* populationFitness(double** individuals, int populationSize, int chromosomeSize, int obectiveFunction) {
-
+    
     double *fitnessArray = (double*) malloc(populationSize * sizeof(double));
+
+    #pragma omp parallel for 
     for (int i = 0; i < populationSize; i++) {
         *(fitnessArray + i) = individualFitness(*(individuals + i), chromosomeSize, obectiveFunction);
+
+        //int tid = omp_get_thread_num();
+        //printf("The thread %d  executes i = %d\n", tid, i);
     }
     return fitnessArray;
 }
