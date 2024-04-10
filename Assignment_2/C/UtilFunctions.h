@@ -27,6 +27,12 @@ double rand_range_double(double min, double max) {
     return rand_double;
 }
 
+int rand_range_int(int min, int max) {
+
+    int random = (rand() % (max - min + 1)) + min;
+    return random;
+}
+
 void printDouble2DArrayPtr(double **arr, int rows, int cols) {
 
     for (int r = 0; r < rows; r++) {
