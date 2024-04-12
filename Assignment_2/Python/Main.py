@@ -53,7 +53,7 @@ for g in range(generations):
     for o in range(nr_offspring):
         
         # Select Parents
-        selected_parents_idxs = uf.selectParentsForBreeding(parent_selection_m, parents, nr_breeding_parents)
+        selected_parents_idxs = uf.selectParentsForBreeding(parent_selection_m, parents, parent_fitness, nr_breeding_parents, nr_tournament)
         selected_parents = parents[selected_parents_idxs, :]
 
         # Spawn offspring from selected parents
