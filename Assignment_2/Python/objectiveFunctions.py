@@ -40,4 +40,4 @@ def egg_crate(x):
 
 def deb1(x):
     dimentions = float(len(x))
-    return -(np.sum(np.power(5.0 * np.pi * x, 6)) / dimentions)
+    return -(np.sum(np.power(np.sin(5.0 * np.pi * x), 6)) / dimentions)

@@ -1,7 +1,8 @@
 import sys
 import Evolution as ev
+
 import threading
-import time
+import multiprocessing
 
 population_size = int(sys.argv[1])
 chromosome_size = int(sys.argv[2])
@@ -37,7 +38,7 @@ upper_bounds = [100.0, 32.0, 10.0, 100.0, 10.0, 5.12, 10.0, 100.0, 5.0, 1.0]
 
 if (objective_function == -1): # Go over all functions
 
-    threads = []
+    processes = []
 
     for f in range(10):
 
@@ -45,14 +46,14 @@ if (objective_function == -1): # Go over all functions
         upper_bound = upper_bounds[f]
 
         objective_function_name = objective_function_names[f]
-        t = threading.Thread(target = ev.evolution, args = [population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
+        p = multiprocessing.Process(target = ev.evolution, args = [population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
                                                             nr_tournament, parent_selection_m, recomb_coef_m, f, objective_function_name,
                                                             lower_bound, upper_bound])
-        t.start()
-        threads.append(t)
+        p.start()
+        processes.append(p)
         
-    for t in threads:
-        t.join()
+    for p in processes:
+        p.join()
     
 else:
     lower_bound = lower_bounds[objective_function]
@@ -62,4 +63,3 @@ else:
     ev.evolution(population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
              nr_tournament, parent_selection_m, recomb_coef_m, objective_function, objective_function_name,
              lower_bound, upper_bound)
-    

@@ -1,14 +1,14 @@
 #! /bin/bash 
 
 population_size=100
-chromosome_size=3
+chromosome_size=2
 generations=250
 
-nr_breeding_parents=2
+nr_breeding_parents=5
 nr_offspring=100
 nr_tournament=10
 
-parent_selection_m=0
+parent_selection_m=2
 recomb_coef_m=1
 
 objective_function=-1
