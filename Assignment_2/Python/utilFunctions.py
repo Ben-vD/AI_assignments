@@ -12,6 +12,24 @@ def evalFitness(individuals, objective_function):
 
         if (objective_function == 0):
             fitness[i] = of.absolute(individuals[i, :])
+        elif (objective_function == 1):
+            fitness[i] = of.ackley_1(individuals[i, :])
+        elif (objective_function == 2):
+            fitness[i] = of.alpine_1(individuals[i, :])
+        elif (objective_function == 3):
+            fitness[i] = of.step_2(individuals[i, :])
+        elif (objective_function == 4):
+            fitness[i] = of.schwefel_2_23(individuals[i, :])
+        elif (objective_function == 5):
+            fitness[i] = of.step_3(individuals[i, :])
+        elif (objective_function == 6):
+            fitness[i] = of.shubert_4(individuals[i, :])
+        elif (objective_function == 7):
+            fitness[i] = of.discus(individuals[i, :])
+        elif (objective_function == 8):
+            fitness[i] = of.egg_crate(individuals[i, :])
+        elif (objective_function == 9):
+            fitness[i] = of.deb1(individuals[i, :])
 
     return fitness
 
