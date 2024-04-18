@@ -3,7 +3,10 @@ import utilFunctions as uf
 from tqdm import tqdm
 
 def evolution(population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring, nr_tournament,
-              parent_selection_m, recomb_coef_m, objective_function, objective_function_name, lower_bound, upper_bound):
+              parent_selection_m, recomb_coef_m, objective_function, objective_function_name, lower_bound, upper_bound,
+              experiment):
+
+    np.random.seed()
 
     # Create recombination Coefficients (Works)
     recomb_coef_arr = np.zeros((nr_breeding_parents, chromosome_size))
@@ -17,9 +20,10 @@ def evolution(population_size, chromosome_size, generations, nr_breeding_parents
     parents = np.random.uniform(size = (population_size, chromosome_size,), low = lower_bound, high = upper_bound)
     parent_fitness = uf.evalFitness(parents, objective_function)
     parent_avg = np.average(parent_fitness)
+    parent_div = uf.diversity(parents)
 
     # Evolution
-    pbar = tqdm(range(generations))
+    pbar = tqdm(range(generations), leave = False)
     pbar.set_description(f'{objective_function_name}: Avg F = {parent_avg}')
     for g in pbar:
 
@@ -36,5 +40,13 @@ def evolution(population_size, chromosome_size, generations, nr_breeding_parents
         
         # Selext next generation (new parents)
         parents, parent_fitness = uf.selectNextGeneration(parents, parent_fitness, offspring, objective_function)
-        parent_avg = parent_avg = np.average(parent_fitness)        
+        parent_avg = parent_avg = np.average(parent_fitness)
+        parent_div = uf.diversity(parents)       
         pbar.set_description(f'{objective_function_name}: Avg F = {parent_avg}')
+
+    file_name = "./Results/{}.txt".format(objective_function_name)
+    result = "Exp {}, Final Avg Fitness = {}; Final Diversity = {}\n".format(experiment, parent_avg, parent_div)
+
+    f = open(file_name, "a")
+    f.write(result)
+    f.close()

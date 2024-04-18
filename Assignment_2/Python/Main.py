@@ -3,6 +3,7 @@ import Evolution as ev
 
 import threading
 import multiprocessing
+from tqdm import tqdm
 
 population_size = int(sys.argv[1])
 chromosome_size = int(sys.argv[2])
@@ -16,6 +17,7 @@ parent_selection_m = int(sys.argv[7])
 recomb_coef_m = int(sys.argv[8])
 
 objective_function = int(sys.argv[9])
+experiments = int(sys.argv[10])
 #lower_bound = float(sys.argv[10])
 #upper_bound = float(sys.argv[11])
 
@@ -28,6 +30,7 @@ print(f"{'Nr Parents in Tournament:' : <30}{nr_tournament}")
 print(f"{'Parent Selection Method:' : <30}{parent_selection_m}")
 print(f"{'Recomb Coef Method:' : <30}{recomb_coef_m}")
 print(f"{'Obective Function:' : <30}{objective_function}")
+print(f"{'Experiments:' : <30}{experiments}")
 #print(f"{'Lower Bound:' : <30}{lower_bound}")
 #print(f"{'Upper Bound:' : <30}{upper_bound}")
 print()
@@ -38,28 +41,30 @@ upper_bounds = [100.0, 32.0, 10.0, 100.0, 10.0, 5.12, 10.0, 100.0, 5.0, 1.0]
 
 if (objective_function == -1): # Go over all functions
 
-    processes = []
+    for e in tqdm(range(experiments), desc="Exp"):
 
-    for f in range(10):
+        processes = []
+        for f in range(10):
 
-        lower_bound = lower_bounds[f]
-        upper_bound = upper_bounds[f]
+            lower_bound = lower_bounds[f]
+            upper_bound = upper_bounds[f]
 
-        objective_function_name = objective_function_names[f]
-        p = multiprocessing.Process(target = ev.evolution, args = [population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
-                                                            nr_tournament, parent_selection_m, recomb_coef_m, f, objective_function_name,
-                                                            lower_bound, upper_bound])
-        p.start()
-        processes.append(p)
-        
-    for p in processes:
-        p.join()
+            objective_function_name = objective_function_names[f]
+            p = multiprocessing.Process(target = ev.evolution, args = [population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
+                                                                nr_tournament, parent_selection_m, recomb_coef_m, f, objective_function_name,
+                                                                lower_bound, upper_bound, e])
+            p.start()
+            processes.append(p)
+            
+        for p in processes:
+            p.join()
     
 else:
-    lower_bound = lower_bounds[objective_function]
-    upper_bound = upper_bounds[objective_function]
-    
-    objective_function_name = objective_function_names[objective_function]
-    ev.evolution(population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
-             nr_tournament, parent_selection_m, recomb_coef_m, objective_function, objective_function_name,
-             lower_bound, upper_bound)
+    for e in tqdm(range(experiments), desc="Exp"):
+        lower_bound = lower_bounds[objective_function]
+        upper_bound = upper_bounds[objective_function]
+        
+        objective_function_name = objective_function_names[objective_function]
+        ev.evolution(population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
+                nr_tournament, parent_selection_m, recomb_coef_m, objective_function, objective_function_name,
+                lower_bound, upper_bound, e)

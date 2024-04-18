@@ -146,3 +146,12 @@ def createRecombCoefArray(nr_breeding_parents, chromosome_size, equal):
     norm_random_arr_cols = (1 / cols_sum) * random_arr
 
     return norm_random_arr_cols
+
+def diversity(individuals):
+    population_size, chromosome_size = individuals.shape
+    avg_genes = np.average(individuals, axis = 0)[np.newaxis,:]
+
+    inner_sum = np.sqrt(np.sum(np.square(individuals - avg_genes), axis = 1))
+    outer_sum = np.sum(inner_sum)
+
+    return outer_sum / population_size
