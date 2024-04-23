@@ -35,7 +35,7 @@ def evalFitness(individuals, objective_function):
 
 
 # Works and Tested
-def selectNextGeneration(parents, parentFitness, offspring, objective_function):
+def selectNextGeneration(parents, parentFitness, offspring, objective_function, nr_tournament, next_gen_selection_m):
 
     population_size, chromosome_size = parents.shape
 
@@ -47,12 +47,36 @@ def selectNextGeneration(parents, parentFitness, offspring, objective_function):
     population_fitness = np.concatenate((parentFitness, offspringFitness), axis = 0)
 
     # Select next generation (top population_size)
-    population_sorted_idxs = np.argsort(population_fitness)
-    population_sorted = population[population_sorted_idxs]
-    population_fitness_sorted = population_fitness[population_sorted_idxs]
 
-    next_generation = population_sorted[:population_size, :]
-    next_generation_fitness = population_fitness_sorted[:population_size]
+    next_generation = np.zeros((population_size, chromosome_size))
+    next_generation_fitness = np.zeros(population_size) 
+    if (next_gen_selection_m == 0): 
+        # Select top n_s individuals
+        population_sorted_idxs = np.argsort(population_fitness)
+        population_sorted = population[population_sorted_idxs]
+        population_fitness_sorted = population_fitness[population_sorted_idxs]
+
+        next_generation = population_sorted[:population_size, :]
+        next_generation_fitness = population_fitness_sorted[:population_size]
+
+    elif (next_gen_selection_m == 1):
+        # Tournament Selection
+        next_gen_idxs = tournamentSelection(population, population_fitness, population_size, nr_tournament)
+        next_generation = population[next_gen_idxs, :]
+        next_generation_fitness = population_fitness[next_gen_idxs]
+        
+    elif (next_gen_selection_m == 2):
+        # Max Dis Selection
+        next_gen_idxs = maxDisTournament(population, population_fitness, population_size, nr_tournament)
+        next_generation = population[next_gen_idxs, :]
+        next_generation_fitness = population_fitness[next_gen_idxs]
+    
+    elif (next_gen_selection_m == -1):
+        # Select Random
+        next_gen_idxs = np.random.choice(len(population), population_size, replace = False)
+        next_generation = population[next_gen_idxs, :]
+        next_generation_fitness = population_fitness[next_gen_idxs]
+
 
     return next_generation, next_generation_fitness
 
@@ -63,7 +87,7 @@ def selectParentsForBreeding(parent_selection_m, parents, parent_fitness, nr_bre
     elif (parent_selection_m == 1):
         return tournamentSelection(parents, parent_fitness, nr_breeding_parents, nr_tournament)
     elif (parent_selection_m == 2):
-        return maxDisTournament(parents, parent_fitness, nr_breeding_parents, nr_tournament)    
+        return maxDisTournament(parents, parent_fitness, nr_breeding_parents, nr_tournament)   
 
 # Works and Tested
 def randomSelection(parents, nr_breeding_parents):
@@ -134,6 +158,10 @@ def maxDisTournament(parents, parent_fitness, nr_breeding_parents, nr_tournament
 
     return selected_parents_idxs
             
+def pcx_variant(parents, parent_fitness, nr_breeding_parents):
+
+    pass
+
 
 # Works and Tested
 def createRecombCoefArray(nr_breeding_parents, chromosome_size, equal):

@@ -15,11 +15,12 @@ nr_tournament = int(sys.argv[6])
 
 parent_selection_m = int(sys.argv[7])
 recomb_coef_m = int(sys.argv[8])
+next_gen_selection_m = int(sys.argv[9])
 
-objective_function = int(sys.argv[9])
-experiments = int(sys.argv[10])
-#lower_bound = float(sys.argv[10])
-#upper_bound = float(sys.argv[11])
+objective_function = int(sys.argv[10])
+experiments = int(sys.argv[11])
+#lower_bound = float(sys.argv[12])
+#upper_bound = float(sys.argv[13])
 
 print(f"{'Population Size:' : <30}{population_size}")
 print(f"{'Chromosome Size:' : <30}{chromosome_size}")
@@ -29,6 +30,7 @@ print(f"{'Nr of Offspring:' : <30}{nr_offspring}")
 print(f"{'Nr Parents in Tournament:' : <30}{nr_tournament}")
 print(f"{'Parent Selection Method:' : <30}{parent_selection_m}")
 print(f"{'Recomb Coef Method:' : <30}{recomb_coef_m}")
+print(f"{'Next Gen Selection Method:' : <30}{next_gen_selection_m}")
 print(f"{'Obective Function:' : <30}{objective_function}")
 print(f"{'Experiments:' : <30}{experiments}")
 #print(f"{'Lower Bound:' : <30}{lower_bound}")
@@ -51,8 +53,8 @@ if (objective_function == -1): # Go over all functions
 
             objective_function_name = objective_function_names[f]
             p = multiprocessing.Process(target = ev.evolution, args = [population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
-                                                                nr_tournament, parent_selection_m, recomb_coef_m, f, objective_function_name,
-                                                                lower_bound, upper_bound, e])
+                                                                nr_tournament, parent_selection_m, recomb_coef_m, next_gen_selection_m, f,
+                                                                objective_function_name, lower_bound, upper_bound, e])
             p.start()
             processes.append(p)
             
@@ -66,5 +68,5 @@ else:
         
         objective_function_name = objective_function_names[objective_function]
         ev.evolution(population_size, chromosome_size, generations, nr_breeding_parents, nr_offspring,
-                nr_tournament, parent_selection_m, recomb_coef_m, objective_function, objective_function_name,
-                lower_bound, upper_bound, e)
+                nr_tournament, parent_selection_m, recomb_coef_m, next_gen_selection_m, objective_function,
+                objective_function_name, lower_bound, upper_bound, e)
