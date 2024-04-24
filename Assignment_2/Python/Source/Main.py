@@ -37,7 +37,7 @@ print(f"{'Experiments:' : <30}{experiments}")
 #print(f"{'Upper Bound:' : <30}{upper_bound}")
 print()
 
-objective_function_names = ["Absolute", "Ackley 1", "Alpine 1", "Step 2", "Schwefel 2.23", "Step 3", "Shubert 4", "Discus", "Egg Crate", "Deb 1"]
+objective_function_names = ["Absolute", "Ackley_1", "Alpine_1", "Step_2", "Schwefel_2.23", "Step_3", "Shubert_4", "Discus", "Egg_Crate", "Deb_1"]
 lower_bounds = [-100.0, -32.0, -10.0, -100.0, -10.0, -5.12, -10.0, -100.0, -5.0, -1.0]
 upper_bounds = [100.0, 32.0, 10.0, 100.0, 10.0, 5.12, 10.0, 100.0, 5.0, 1.0]
 
@@ -46,7 +46,7 @@ if (objective_function == -1): # Go over all functions
     for e in tqdm(range(experiments), desc="Exp"):
 
         processes = []
-        for f in range(10):
+        for f in range(len(objective_function_names)):
 
             lower_bound = lower_bounds[f]
             upper_bound = upper_bounds[f]

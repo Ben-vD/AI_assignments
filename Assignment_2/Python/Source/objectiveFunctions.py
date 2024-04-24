@@ -30,7 +30,9 @@ def shubert_4(x):
     for j in range(5):
         inner_sum +=  float(j) * np.cos((j + 1) * x + j)
 
-    return np.sum(inner_sum)
+    dimentions = float(len(x))
+
+    return np.sum(inner_sum) / dimentions
 
 def discus(x):
     return np.power(10.0,6) * np.square(x[0]) + np.sum(np.square(np.delete(x, 0)))
