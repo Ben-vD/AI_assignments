@@ -32,18 +32,19 @@ def print_all(ants, grid):
     print("Ants")
     print(ants_grid)
 
-def print_grid(ants, data_points):
+def plt_grid(ants, data_points, grid):
 
+    plt_grid = np.zeros(grid.shape)
 
     for data_point in data_points:
         if (data_point.picked_up == False):
-            plt.scatter(data_point.col, data_point.row, c = "b")
+            plt_grid[data_point.row, data_point.col] = 1
 
     for ant in ants:
         if (ant._has_datapoint()):
-            plt.scatter(ant.col, ant.row, c = "g")
+            plt_grid[ant.row, ant.col] = 2
         else:
-            plt.scatter(ant.col, ant.row, c = "r")
+            plt_grid[ant.row, ant.col] = 3
 
-    plt.grid()
+    plt.matshow(plt_grid)
     #plt.show()

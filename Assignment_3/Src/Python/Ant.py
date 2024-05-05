@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 class Ant:
 
@@ -69,6 +70,7 @@ class Ant:
 
         local_density = sum / (2 * patch_size + 1)**2
 
+        #print(found_idxs)
         #print(local_density)
 
         if (local_density <= 0):
@@ -77,7 +79,7 @@ class Ant:
         return local_density 
     
     def _traverse_local_patch(self, grid, patch_size, row, col, radius, traversed_area, found_idxs):
-        
+
         # Fix invalid rows and cols
         grid_rows, grid_cols = grid.shape
         if (row == -1):
@@ -90,16 +92,20 @@ class Ant:
         elif (col == grid_cols):
             col = 0
 
+        if (traversed_area[row, col] == 1):
+            return
+
+        # Mark current area as checked
+        traversed_area[row, col] = 1
+
         # Check if index is found
         if (grid[row, col] != -1 and radius != 0):
             found_idxs.append(grid[row, col])
 
         # Base Case. If patch size nr of steps away or area already checked
-        if (radius == patch_size or traversed_area[row, col] == 1):
+        if (radius == patch_size):
             return
 
-        # Mark current area as checked
-        traversed_area[row, col] = 1
 
         self._traverse_local_patch(grid, patch_size, row + 1, col - 1,  radius + 1, traversed_area, found_idxs)
         self._traverse_local_patch(grid, patch_size, row + 1, col,      radius + 1, traversed_area, found_idxs)
