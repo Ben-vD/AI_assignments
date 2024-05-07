@@ -22,3 +22,14 @@ class DataPoint:
 
     def _euclidean_distance(self, data_point):
         return np.linalg.norm(self.data_vector - data_point.data_vector)
+    
+    def _cosine_similarity(self, data_point):
+
+        incoming_data_vector = data_point.data_vector
+
+        num = np.dot(self.data_vector, incoming_data_vector)
+        den = np.linalg.norm(self.data_vector) * np.linalg.norm(incoming_data_vector)
+
+        sim = num / den
+
+        return 1 - sim

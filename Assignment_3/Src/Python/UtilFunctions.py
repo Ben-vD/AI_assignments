@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
 def random_data():
     # Training data - two randomly-generated Gaussian-distributed clouds of points in 2d space
     np.random.seed(0)
@@ -16,7 +19,23 @@ def random_data():
     X = np.vstack([np.random.randn(N)*covariances[0, y] + means[0, y],
                 np.random.randn(N)*covariances[1, y] + means[1, y]])
     
-    return X.T
+    return X.T, y
+
+def plt_grid_graph(ants, data_points, grid, data_labels):
+    
+
+    data_points_pos = np.zeros((len(data_points), 2))
+    for i, data_point in enumerate(data_points):
+        data_points_pos[i, 0] = data_point.col
+        data_points_pos[i, 1] = data_point.row
+
+    for c in (np.unique(data_labels)):
+        plt.scatter(data_points_pos[data_labels == c, 0], data_points_pos[data_labels == c, 1], label = c)
+
+    plt.xlim(0, grid.shape[1])
+    plt.ylim(0, grid.shape[0])
+    plt.legend()
+    plt.show()
 
 def print_all(ants, grid):
     ants_grid = np.random.randint(size = grid.shape, low = -1, high = 0)

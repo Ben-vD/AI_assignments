@@ -9,7 +9,8 @@ from sklearn import datasets
 
 class AntClustering:
 
-    def __init__(self, grid_rows, grid_cols, nr_ants, data, iterations, gamma, gamma_1, gamma_2, patch_size):
+    def __init__(self, grid_rows, grid_cols, nr_ants, data, iterations, gamma, gamma_1, gamma_2,
+                 patch_size, speed_min, speed_max, *, data_labels = []):
         
         self.grid = np.random.randint(size = (grid_rows, grid_cols), low = -1, high = 0)
 
@@ -19,24 +20,29 @@ class AntClustering:
         self.gamma_1 = gamma_1
         self.gamma_2 = gamma_2
         self.path_size = patch_size
+        self.speed_min = speed_min
+        self.speed_max = speed_max
 
         self.ants = []
         for i in range(nr_ants):
-            self.ants.append(Ant.Ant(self.grid))
+            self.ants.append(Ant.Ant(self.grid, self.speed_min, self.speed_max))
 
         self.data_points = []
         for i in range(len(data)):
-            self.data_points.append(dp.DataPoint(self.grid, data[i], i))        
+            self.data_points.append(dp.DataPoint(self.grid, data[i], i))       
 
-        uf.plt_grid(self.ants, self.data_points, self.grid)
-        plt.show()
+
+        #uf.plt_grid(self.ants, self.data_points, self.grid)
+        #plt.show()
+        uf.plt_grid_graph(self.ants, self.data_points, self.grid, data_labels)
 
         #uf.print_all(self.ants, self.grid)
 
         self._find_clusters(iterations)
 
-        uf.plt_grid(self.ants, self.data_points, self.grid)
-        plt.show()
+        #uf.plt_grid(self.ants, self.data_points, self.grid)
+        #plt.show()
+        uf.plt_grid_graph(self.ants, self.data_points, self.grid, data_labels = data_labels)
 
     def _find_clusters(self, iterations):
         for i in tqdm(range(iterations)):
@@ -56,7 +62,9 @@ class AntClustering:
             if (position_value != -1 and ant._has_datapoint() == False):
 
                 current_data_point_idx = position_value
-                local_density = ant._local_density(self.grid, self.data_points, self.path_size, self.gamma)
+                local_density = ant._local_density(self.grid, self.data_points, self.path_size, self.gamma, self.speed_max)
+
+                
                 p_pick_up = ((self.gamma_1) / (self.gamma_1 + local_density))**2
 
                 if (np.random.uniform() <= p_pick_up):
@@ -66,7 +74,7 @@ class AntClustering:
 
             elif (position_value == -1 and ant._has_datapoint() == True):
 
-                local_density = ant._local_density(self.grid, self.data_points, self.path_size, self.gamma)
+                local_density = ant._local_density(self.grid, self.data_points, self.path_size, self.gamma, self.speed_max)
 
                 p_drop = 1
                 if (local_density < self.gamma_2):
@@ -83,6 +91,8 @@ class AntClustering:
 
             ant._move(self.grid)
 
+    def final_labels():
+        pass
 
 if __name__ == "__main__":
     
@@ -94,18 +104,21 @@ if __name__ == "__main__":
     gamma_1 = float(sys.argv[6])
     gamma_2 = float(sys.argv[7])
     patch_size = int(sys.argv[8])
+    speed_min = int(sys.argv[9])
+    speed_max = int(sys.argv[10])
 
 
-    data = uf.random_data()
+    #data, data_label = uf.random_data()
 
     #np.random.seed(0)
     #data = np.concatenate((np.random.randint(low = 0, high = 5, size = (5, 2)), np.random.randint(low = 20, high = 25, size = (5, 2))))
 
     #print(data)
 
-    #iris = datasets.load_iris()
-    #data = iris.data[:,:2]
-    #print(data)
+    iris = datasets.load_iris()
+    iris_data = iris.data#[:,:2]
+    iris_labels = iris.target
+    #print(iris_labels)
     #sys.exit()
 
-    AntClustering(grid_rows, grid_cols, nr_ants, data, iterations, gamma, gamma_1, gamma_2, patch_size)
+    AntClustering(grid_rows, grid_cols, nr_ants, iris_data, iterations, gamma, gamma_1, gamma_2, patch_size, speed_min, speed_max, data_labels = iris_labels)
